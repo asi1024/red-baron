@@ -2,7 +2,7 @@ matrix:
   include:
     - os: linux
       language: cpp
-      compiler: g++
+      compiler: "g++-7"
       addons:
         apt:
           sources:
@@ -15,7 +15,32 @@ matrix:
         - ln -s `which g++-7` .local/g++
         - PATH=${PWD}/.local:${PATH}
       script:
+        - g++ --version
         - ./test.py example/cpp
+
+    - os: linux
+      language: haskell
+      addons:
+        apt:
+          sources:
+            - hvr-ghc
+          packages:
+            - cabal-install-2.2
+            - ghc-8.4.3
+      install:
+        - mkdir .local
+        - ln -s `which ghc-8.4.3` .local/ghc
+        - PATH=${PWD}/.local:${PATH}
+      script:
+        - ghc --version
+        - ./test.py example/haskell
+
+    - os: linux
+      language: python
+      python: 3.6
+      script:
+        - python --version
+        - ./test.py example/python
 
 before_install:
   - yes | pyenv install 3.6.3

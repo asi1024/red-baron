@@ -21,7 +21,16 @@ ignore_file = [
 rule_from_language = {
     'cpp': ('g++ --std=c++14 -O2 -Werror ${source} -o ${exe}',
             '${exe}', 8),
+    'cs': ('mcs -warn:0 -o+ -r:System.Numerics ${source}',
+           'mono ${name}.exe', 16),
+    'go': ('go build -o ${exe}', '${exe}', 12),
+    'hs': ('ghc -O2 ${source} -o ${exe}', '${exe}', 12),
+    'java': ('javac ${source}', 'java -Xss256M ${name}', 16),
+    'ml': ('ocamlfind ocamlopt '
+           '-linkpkg -thread -package str,num,threads,batteries',
+           '${exe}', 12),
     'py': (None, '/usr/bin/env python ${source}', 40),
+    'rs': ('rustc -O -o ${exe}', '${exe}', 8),
 }
 
 
