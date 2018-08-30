@@ -53,7 +53,7 @@ def test_single(target):
     if compile_rule is not None:
         compile_rule = Template(compile_rule).substitute(**kwargs)
         print('Compiling ...')
-        os.system('{} &> /dev/null'.format(compile_rule))
+        os.system('{}'.format(compile_rule))
     else:
         mode = source.stat().st_mode
         source.chmod((mode & 0o777) | 0o111)
