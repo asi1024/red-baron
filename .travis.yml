@@ -36,6 +36,13 @@ matrix:
         - ./test.py example/haskell
 
     - os: linux
+      language: java
+      jdk: openjdk10
+      script:
+        - java --version
+        - ./test.py example/java
+
+    - os: linux
       language: python
       python: 3.6
       script:

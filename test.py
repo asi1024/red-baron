@@ -25,7 +25,7 @@ rule_from_language = {
            'mono ${name}.exe', 16),
     'go': ('go build -o ${exe}', '${exe}', 12),
     'hs': ('ghc -O2 ${source} -o ${exe}', '${exe}', 12),
-    'java': ('javac ${source}', 'java -Xss256M ${name}', 16),
+    'java': ('javac ${source}', 'java -Xms512m ${name}', 16),
     'ml': ('ocamlfind ocamlopt '
            '-linkpkg -thread -package str,num,threads,batteries',
            '${exe}', 12),
