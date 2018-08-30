@@ -62,7 +62,13 @@ def test_single(target):
     if compile_rule is not None:
         compile_rule = Template(compile_rule).substitute(**kwargs)
         print('Compiling ...')
-        os.system('{}'.format(compile_rule))
+        result = os.system('{}'.format(compile_rule))
+
+        if result != 0:
+            msg = colored('Compile Error', 'cyan')
+            print('{}: {}'.format(target, msg))
+            exit(1)
+
     else:
         mode = source.stat().st_mode
         source.chmod((mode & 0o777) | 0o111)
