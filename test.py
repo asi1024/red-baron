@@ -19,18 +19,17 @@ ignore_file = [
 
 
 rule_from_language = {
-    'cpp': ('g++ --std=c++14 -O2 -Werror ${source} -o ${exe}',
-            '${exe}', 8),
-    'cs': ('mcs -warn:0 -o+ -r:System.Numerics ${source}',
+    'cpp': ('g++ --std=c++14 -O2 -Werror ${name}.cpp -o exec', './exec', 8),
+    'cs': ('mcs -warn:0 -o+ -r:System.Numerics ${name}.cs',
            'mono ${name}.exe', 16),
-    'go': ('go build -o ${exe}', '${exe}', 12),
-    'hs': ('ghc -O2 ${source} -o ${exe}', '${exe}', 12),
-    'java': ('javac ${source}', 'java -Xms512m ${name}', 16),
-    'ml': ('ocamlfind ocamlopt '
-           '-linkpkg -thread -package str,num,threads,batteries',
-           '${exe}', 12),
-    'py': (None, '/usr/bin/env python ${source}', 40),
-    'rs': ('rustc -O -o ${exe}', '${exe}', 8),
+    'go': ('go build ${name}.go -o exec', './exec', 12),
+    'hs': ('ghc -O2 ${name}.hs -o exec', './exec', 12),
+    'java': ('javac ${name}.java', 'java -Xms512m ${name}', 16),
+    'ml': ('ocamlfind ocamlopt ${name}.ml'
+           '-linkpkg -thread -package str,num,threads,batteries -o exec',
+           './exec', 12),
+    'py': (None, '/usr/bin/env python ${name}.py', 40),
+    'rs': ('rustc -O ${name}.rs -o exec', './exec', 8),
 }
 
 
@@ -38,7 +37,6 @@ def test_single(target):
     suffix = target.suffix[1:]
     source = tmp_dir / target.name
     out = tmp_dir / 'out'
-    exe = tmp_dir / 'exec'
 
     if suffix not in rule_from_language:
         return
@@ -56,13 +54,12 @@ def test_single(target):
 
     shutil.copy(str(target), str(source))
     compile_rule, run_rule, time_duration = rule_from_language[suffix]
-    kwargs = {'source': source, 'exe': exe, 'name': source.stem}
 
     # Compile
     if compile_rule is not None:
-        compile_rule = Template(compile_rule).substitute(**kwargs)
+        compile_rule = Template(compile_rule).substitute(name=source.stem)
         print('Compiling ...')
-        result = os.system('{}'.format(compile_rule))
+        result = os.system('cd {} && {}'.format(tmp_dir, compile_rule))
 
         if result != 0:
             msg = colored('Compile Error', 'cyan')
@@ -74,7 +71,7 @@ def test_single(target):
         source.chmod((mode & 0o777) | 0o111)
 
     # Test
-    run_rule = Template(run_rule).substitute(**kwargs)
+    run_rule = Template(run_rule).substitute(name=source.stem)
     tests = tests_dir / source.stem
 
     for test_id in set(int(t.stem) for t in tests.iterdir()):
@@ -82,8 +79,8 @@ def test_single(target):
         answer = (tests / str(test_id)).with_suffix('.out')
 
         # Run
-        result = os.system('timeout -s 9 {} {} < {} > {}'.format(
-            time_duration, run_rule, testcase, out))
+        result = os.system('cd {} && timeout -s 9 {} {} < ../{} > {}'.format(
+            tmp_dir, time_duration, run_rule, testcase, out.name))
 
         if result == 137:
             msg = colored('Time Limit Exceeded', 'yellow')
