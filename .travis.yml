@@ -27,7 +27,7 @@ matrix:
 
     - os: linux
       language: go
-      go: "1.10"
+      go: "1.10.x"
       script:
         - go version
         - ./test.py example/go
