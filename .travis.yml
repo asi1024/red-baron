@@ -26,6 +26,13 @@ matrix:
         - ./test.py example/csharp
 
     - os: linux
+      language: go
+      go: "1.10"
+      script:
+        - go version
+        - ./test.py example/go
+
+    - os: linux
       language: haskell
       addons:
         apt:
@@ -51,7 +58,7 @@ matrix:
 
     - os: linux
       language: python
-      python: 3.6
+      python: "3.6"
       script:
         - python --version
         - ./test.py example/python
