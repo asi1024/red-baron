@@ -65,6 +65,13 @@ matrix:
         - python --version
         - ./test.py example/python
 
+    - os: linux
+      language: rust
+      rust: 1.27.2
+      script:
+        - rustc --version
+        - ./test.py example/rust
+
 before_install:
   - yes | pyenv install 3.6.3
   - pyenv global 3.6.3
