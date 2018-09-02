@@ -23,7 +23,8 @@ rule_from_language = {
     'cs': ('mcs -warn:0 -o+ -r:System.Numerics ${name}.cs',
            'mono ${name}.exe', 16),
     'd': ('dmd -m64 -w -O -release -inline ${name}.d', './${name}', 12),
-    'go': ('go build ${name} ${name}.go', './${name}', 12),
+    # 'go': ('go build -o ${name} ${name}.go', './${name}', 12),
+    'go': (None, 'go run ${name}.go', 12),
     'hs': ('ghc -O2 ${name}.hs -o exec', './exec', 12),
     'java': ('javac ${name}.java', 'java -Xms512m ${name}', 16),
     'ml': ('ocamlfind ocamlopt ${name}.ml'
