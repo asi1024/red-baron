@@ -34,14 +34,9 @@ matrix:
 
     - os: linux
       language: haskell
-      addons:
-        apt:
-          sources:
-            - hvr-ghc
-          packages:
-            - cabal-install-2.2
-            - ghc-8.4.3
+      ghc: "8.4.3"
       install:
+        - alias cabal=echo
         - mkdir .local
         - ln -s `which ghc-8.4.3` .local/ghc
         - PATH=${PWD}/.local:${PATH}
