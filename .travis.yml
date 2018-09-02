@@ -26,6 +26,13 @@ matrix:
         - ./test.py example/csharp
 
     - os: linux
+      language: d
+      d: "dmd-2.081.2"
+      script:
+        - dmd --version
+        - ./test.py example/d
+
+    - os: linux
       language: go
       go: "1.10.x"
       script:
