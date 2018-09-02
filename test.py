@@ -28,7 +28,7 @@ rule_from_language = {
     'hs': ('ghc -O2 ${name}.hs -o exec', './exec', 12),
     'java': ('javac ${name}.java', 'java -Xms512m ${name}', 16),
     'ml': ('ocamlfind ocamlopt ${name}.ml'
-           '-linkpkg -thread -package str,num,threads,batteries -o exec',
+           ' -linkpkg -thread -package str,num,threads,batteries -o exec',
            './exec', 12),
     'py': (None, '/usr/bin/env python ${name}.py', 40),
     'rs': ('rustc -O ${name}.rs -o exec', './exec', 8),

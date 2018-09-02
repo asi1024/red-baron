@@ -59,6 +59,20 @@ matrix:
         - ./test.py example/java
 
     - os: linux
+      language: ocaml
+      install:
+        - sudo add-apt-repository --yes ppa:avsm/ppa
+        - sudo apt-get update
+        - sudo apt-get install opam
+        - opam init -y
+        - eval $(opam config env)
+        - opam config var root
+        - opam install -y num batteries
+      script:
+        - ocaml --version
+        - ./test.py example/ocaml
+
+    - os: linux
       language: python
       python: "3.6"
       script:
