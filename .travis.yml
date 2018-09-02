@@ -19,6 +19,13 @@ matrix:
         - ./test.py example/cpp
 
     - os: linux
+      language: csharp
+      mono: "3.12.0"
+      script:
+        - mono --version
+        - ./test.py example/csharp
+
+    - os: linux
       language: haskell
       addons:
         apt:
