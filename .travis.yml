@@ -2,6 +2,13 @@ matrix:
   include:
     - os: linux
       language: cpp
+      compiler: gcc
+      script:
+        - gcc --version
+        - ./test.py example/c
+
+    - os: linux
+      language: cpp
       compiler: "g++-7"
       addons:
         apt:

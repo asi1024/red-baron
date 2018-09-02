@@ -19,6 +19,7 @@ ignore_file = [
 
 
 rule_from_language = {
+    'c': ('gcc -O2 -Werror ${name}.c -o exec', './exec', 8),
     'cpp': ('g++ --std=c++14 -O2 -Werror ${name}.cpp -o exec', './exec', 8),
     'cs': ('mcs -warn:0 -o+ -r:System.Numerics ${name}.cs',
            'mono ${name}.exe', 16),
