@@ -1,6 +1,19 @@
-#!/bin/bash
+#!/usr/bin/env python
 
-set -eu
+import argparse
+from pathlib import Path
+import sys
 
-cd `dirname $0`
-./scripts/test.py $@
+import scripts
+
+if __name__ == '__main__':
+    if sys.version_info[:3] < (3, 4, 0):
+        Exception('Use Python 3.4 or later')
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        'target', nargs='?', help='target directory', default='.')
+    args = parser.parse_args()
+    target = Path.cwd() / args.target
+
+    scripts.test_recursive(target)
