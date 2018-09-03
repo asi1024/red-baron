@@ -12,10 +12,9 @@ import diff
 import download
 
 
-tests_dir = Path('tests')
-tmp_dir = Path('tmp')
-ignore_file = [
-    'diff.py', 'download.py', 'test.py', str(tests_dir), str(tmp_dir)]
+tests_dir = download.tests_dir
+workspace_dir = download.cache_dir / 'workspace'
+ignore_file = ['diff.py', 'download.py', 'test.py']
 
 
 rule_from_language = {
@@ -43,8 +42,8 @@ rule_from_language = {
 
 def test_single(target):
     suffix = target.suffix[1:]
-    source = tmp_dir / target.name
-    out = tmp_dir / 'out'
+    source = workspace_dir / target.name
+    out = workspace_dir / 'out'
 
     if suffix not in rule_from_language:
         return
@@ -55,19 +54,19 @@ def test_single(target):
     download.download_from_problem_id(source.stem)
 
     # Prepare
-    if tmp_dir.exists() and tmp_dir.is_dir():
-        shutil.rmtree(tmp_dir)
+    if workspace_dir.exists() and workspace_dir.is_dir():
+        shutil.rmtree(workspace_dir)
 
-    tmp_dir.mkdir()
+    workspace_dir.mkdir(parents=True)
 
-    shutil.copy(str(target), str(source))
+    shutil.copy(src=str(target), dst=str(source))
     compile_rule, run_rule, time_duration = rule_from_language[suffix]
 
     # Compile
     if compile_rule is not None:
         compile_rule = Template(compile_rule).substitute(name=source.stem)
         print('Compiling ...')
-        result = os.system('cd {} && {}'.format(tmp_dir, compile_rule))
+        result = os.system('cd {} && {}'.format(workspace_dir, compile_rule))
 
         if result != 0:
             msg = colored('Compile Error', 'cyan')
@@ -87,8 +86,8 @@ def test_single(target):
         answer = (tests / str(test_id)).with_suffix('.out')
 
         # Run
-        result = os.system('cd {} && timeout -s 9 {} {} < ../{} > {}'.format(
-            tmp_dir, time_duration, run_rule, testcase, out.name))
+        result = os.system('cd {} && timeout -s 9 {} {} < {} > {}'.format(
+            workspace_dir, time_duration, run_rule, testcase, out.name))
 
         if result in [137, 35072]:
             msg = colored('Time Limit Exceeded', 'yellow')
@@ -110,15 +109,16 @@ def test_single(target):
     print('{}: {}'.format(target, colored('Passed', 'green')))
     print('')
 
-    shutil.rmtree(str(tmp_dir))
+    shutil.rmtree(str(workspace_dir))
 
 
 def test_recursive(target):
-    if str(target) in ignore_file:
+    if str(target.name) in ignore_file:
         return
 
     if target.is_dir():
-        listdir = [p for p in target.iterdir() if not str(p).startswith('.')]
+        listdir = [p for p in target.iterdir()
+                   if not str(p.name).startswith('.')]
         listdir.sort()
         for x in listdir:
             test_recursive(x)
@@ -131,12 +131,9 @@ if __name__ == '__main__':
         Exception('Use Python 3.4 or later')
 
     parser = argparse.ArgumentParser()
-
     parser.add_argument(
         'target', nargs='?', help='target directory', default='.')
-
     args = parser.parse_args()
+    target = Path.cwd() / args.target
 
-    target = args.target
-
-    test_recursive(Path(target))
+    test_recursive(target)
