@@ -67,16 +67,19 @@ matrix:
 
     - os: linux
       language: ocaml
+      env:
+        - LANG="OCaml 4.06.1"
       install:
         - sudo add-apt-repository --yes ppa:avsm/ppa
         - sudo apt-get update
         - sudo apt-get install opam
         - opam init -y
+        - opam switch 4.06.1
         - eval $(opam config env)
         - opam config var root
         - opam install -y num batteries
       script:
-        - ocaml --version
+        - ocaml -version
         - ./test.py example/ocaml
 
     - os: linux
