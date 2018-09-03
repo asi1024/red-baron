@@ -8,8 +8,8 @@ from string import Template
 import sys
 from termcolor import colored
 
-import diff
-import download
+from scripts import diff
+from scripts import download
 
 
 tests_dir = download.tests_dir
