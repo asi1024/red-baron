@@ -36,6 +36,7 @@ rule_from_language = {
            ' -linkpkg -thread -package str,num,threads,batteries -o exec',
            './exec', 12),
     'py': (None, '/usr/bin/env python ${name}.py', 40),
+    'rb': (None, 'ruby ${name}.rb', 40),
     'rs': ('rustc -O ${name}.rs -o exec', './exec', 8),
 }
 
@@ -89,7 +90,7 @@ def test_single(target):
         result = os.system('cd {} && timeout -s 9 {} {} < ../{} > {}'.format(
             tmp_dir, time_duration, run_rule, testcase, out.name))
 
-        if result == 137:
+        if result in [137, 35072]:
             msg = colored('Time Limit Exceeded', 'yellow')
         elif result != 0:
             msg = colored('Runtime Error', 'magenta')

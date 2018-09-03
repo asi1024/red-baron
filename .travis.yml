@@ -90,6 +90,13 @@ matrix:
         - ./test.py example/python
 
     - os: linux
+      language: ruby
+      rvm: "2.2"
+      script:
+        - ruby --version
+        - ./test.py example/ruby
+
+    - os: linux
       language: rust
       rust: 1.27.2
       script:
