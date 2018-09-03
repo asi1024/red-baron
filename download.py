@@ -7,8 +7,9 @@ import shutil
 
 
 url = 'https://judgedat.u-aizu.ac.jp/testcases'
-tests_dir = Path('tests')
-tmp_dir = Path('tmp')
+cache_dir = Path.home() / '.red_baron'
+tests_dir = cache_dir / 'tests'
+tmp_dir = cache_dir / 'aoj_tmp'
 
 error_mes = [
     '/* Test case #{1} for problem {0} is not available. */',
@@ -47,7 +48,7 @@ def download_from_problem_id(pid):
     if tmp_dir.exists() and tmp_dir.is_dir():
         shutil.rmtree(tmp_dir)
 
-    tmp_dir.mkdir()
+    tmp_dir.mkdir(parents=True)
     case_num = 0
 
     for cid in range(1, 1000):
