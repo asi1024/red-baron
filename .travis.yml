@@ -1,0 +1,115 @@
+matrix:
+  include:
+    - os: linux
+      language: cpp
+      compiler: gcc
+      script:
+        - gcc --version
+        - ./test.py example/c
+
+    - os: linux
+      language: cpp
+      compiler: "g++-7"
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+            - clang-format-3.9
+      install:
+        - mkdir .local
+        - ln -s `which g++-7` .local/g++
+        - PATH=${PWD}/.local:${PATH}
+      script:
+        - g++ --version
+        - ./test.py example/cpp
+
+    - os: linux
+      language: csharp
+      mono: "3.12.0"
+      script:
+        - mono --version
+        - ./test.py example/csharp
+
+    - os: linux
+      language: d
+      d: "dmd-2.081.2"
+      script:
+        - dmd --version
+        - ./test.py example/d
+
+    - os: linux
+      language: go
+      go: "1.10.x"
+      script:
+        - go version
+        - ./test.py example/go
+
+    - os: linux
+      language: haskell
+      ghc: "8.4.3"
+      install:
+        - alias cabal=echo
+        - mkdir .local
+        - ln -s `which ghc-8.4.3` .local/ghc
+        - PATH=${PWD}/.local:${PATH}
+      script:
+        - ghc --version
+        - ./test.py example/haskell
+
+    - os: linux
+      language: java
+      jdk: openjdk10
+      script:
+        - java --version
+        - ./test.py example/java
+
+    - os: linux
+      language: ocaml
+      env:
+        - LANG="OCaml 4.06.1"
+      install:
+        - sudo add-apt-repository --yes ppa:avsm/ppa
+        - sudo apt-get update
+        - sudo apt-get install opam
+        - opam init -y
+        - opam switch 4.06.1
+        - eval $(opam config env)
+        - opam config var root
+        - opam install -y num batteries
+      script:
+        - ocaml -version
+        - ./test.py example/ocaml
+
+    - os: linux
+      language: python
+      python: "3.6"
+      script:
+        - python --version
+        - ./test.py example/python
+
+    - os: linux
+      language: ruby
+      rvm: "2.2"
+      script:
+        - ruby --version
+        - ./test.py example/ruby
+
+    - os: linux
+      language: rust
+      rust: 1.27.2
+      script:
+        - rustc --version
+        - ./test.py example/rust
+
+before_install:
+  - yes | pyenv install 3.6.3
+  - pyenv global 3.6.3
+  - pip install --upgrade pip
+  - pip install requests termcolor
+
+sudo: false
+
+notifications:
+  email: false
