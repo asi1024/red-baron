@@ -5,7 +5,7 @@ matrix:
       compiler: gcc
       script:
         - gcc --version
-        - ./test.py example/c
+        - ./red-baron example/c
 
     - os: linux
       language: cpp
@@ -23,28 +23,28 @@ matrix:
         - PATH=${PWD}/.local:${PATH}
       script:
         - g++ --version
-        - ./test.py example/cpp
+        - ./red-baron example/cpp
 
     - os: linux
       language: csharp
       mono: "3.12.0"
       script:
         - mono --version
-        - ./test.py example/csharp
+        - ./red-baron example/csharp
 
     - os: linux
       language: d
       d: "dmd-2.081.2"
       script:
         - dmd --version
-        - ./test.py example/d
+        - ./red-baron example/d
 
     - os: linux
       language: go
       go: "1.10.x"
       script:
         - go version
-        - ./test.py example/go
+        - ./red-baron example/go
 
     - os: linux
       language: haskell
@@ -56,14 +56,14 @@ matrix:
         - PATH=${PWD}/.local:${PATH}
       script:
         - ghc --version
-        - ./test.py example/haskell
+        - ./red-baron example/haskell
 
     - os: linux
       language: java
       jdk: openjdk10
       script:
         - java --version
-        - ./test.py example/java
+        - ./red-baron example/java
 
     - os: linux
       language: ocaml
@@ -80,28 +80,28 @@ matrix:
         - opam install -y num batteries
       script:
         - ocaml -version
-        - ./test.py example/ocaml
+        - ./red-baron example/ocaml
 
     - os: linux
       language: python
       python: "3.6"
       script:
         - python --version
-        - ./test.py example/python
+        - ./red-baron example/python
 
     - os: linux
       language: ruby
       rvm: "2.2"
       script:
         - ruby --version
-        - ./test.py example/ruby
+        - ./red-baron example/ruby
 
     - os: linux
       language: rust
       rust: 1.27.2
       script:
         - rustc --version
-        - ./test.py example/rust
+        - ./red-baron example/rust
 
 before_install:
   - yes | pyenv install 3.6.3
