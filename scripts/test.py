@@ -104,6 +104,12 @@ def test_single(target):
             print('=== {} ==='.format(testcase))
             with testcase.open() as f:
                 print('\n'.join(f.readlines()))
+            print('=== Expected ===')
+            with answer.open() as f:
+                print('\n'.join(f.readlines()))
+            print('=== Output ===')
+            with out.open() as f:
+                print('\n'.join(f.readlines()))
             exit(1)
 
     print('{}: {}'.format(target, colored('Passed', 'green')))
