@@ -5,7 +5,7 @@ matrix:
       compiler: gcc
       script:
         - gcc --version
-        - ./red-baron example/c
+        - red-baron example/c
 
     - os: linux
       language: cpp
@@ -23,28 +23,28 @@ matrix:
         - PATH=${PWD}/.local:${PATH}
       script:
         - g++ --version
-        - ./red-baron example/cpp
+        - red-baron example/cpp
 
     - os: linux
       language: csharp
       mono: "3.12.0"
       script:
         - mono --version
-        - ./red-baron example/csharp
+        - red-baron example/csharp
 
     - os: linux
       language: d
       d: "dmd-2.081.2"
       script:
         - dmd --version
-        - ./red-baron example/d
+        - red-baron example/d
 
     - os: linux
       language: go
       go: "1.10.x"
       script:
         - go version
-        - ./red-baron example/go
+        - red-baron example/go
 
     - os: linux
       language: haskell
@@ -56,14 +56,14 @@ matrix:
         - PATH=${PWD}/.local:${PATH}
       script:
         - ghc --version
-        - ./red-baron example/haskell
+        - red-baron example/haskell
 
     - os: linux
       language: java
       jdk: openjdk10
       script:
         - java --version
-        - ./red-baron example/java
+        - red-baron example/java
 
     - os: linux
       language: ocaml
@@ -80,34 +80,34 @@ matrix:
         - opam install -y num batteries
       script:
         - ocaml -version
-        - ./red-baron example/ocaml
+        - red-baron example/ocaml
 
     - os: linux
       language: python
       python: "3.6"
       script:
         - python --version
-        - ./red-baron example/python
+        - red-baron example/python3
 
     - os: linux
       language: ruby
       rvm: "2.2"
       script:
         - ruby --version
-        - ./red-baron example/ruby
+        - red-baron example/ruby
 
     - os: linux
       language: rust
       rust: 1.27.2
       script:
         - rustc --version
-        - ./red-baron example/rust
+        - red-baron example/rust
 
 before_install:
   - yes | pyenv install 3.6.3
   - pyenv global 3.6.3
   - pip install --upgrade pip
-  - pip install requests termcolor
+  - pip install .
 
 sudo: false
 
