@@ -17,13 +17,9 @@ matrix:
           packages:
             - g++-7
             - clang-format-3.9
-      install:
-        - mkdir .local
-        - ln -s `which g++-7` .local/g++
-        - PATH=${PWD}/.local:${PATH}
       script:
         - g++ --version
-        - red-baron example/cpp
+        - CXX=g++-7 red-baron example/cpp
 
     - os: linux
       language: csharp
@@ -51,12 +47,9 @@ matrix:
       ghc: "8.4.3"
       install:
         - alias cabal=echo
-        - mkdir .local
-        - ln -s `which ghc-8.4.3` .local/ghc
-        - PATH=${PWD}/.local:${PATH}
       script:
         - ghc --version
-        - red-baron example/haskell
+        - GHC=ghc-8.4.3 red-baron example/haskell
 
     - os: linux
       language: java
