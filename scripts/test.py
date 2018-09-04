@@ -10,6 +10,7 @@ from termcolor import colored
 
 from scripts import diff
 from scripts import download
+from scripts import env
 
 
 tests_dir = download.tests_dir
@@ -18,12 +19,8 @@ ignore_file = ['diff.py', 'download.py', 'test.py']
 
 
 rule_from_language = {
-    'c': ('gcc -O2 -o exec ${name}.c'
-          ' -Werror -Wextra -Wshadow -Wno-unused-result',
-          './exec', 8),
-    'cpp': ('g++ --std=c++14 -O2 -o exec ${name}.cpp'
-            ' -Werror -Wextra -Wshadow -Wno-unused-result',
-            './exec', 8),
+    'c': (env.cc + ' -o exec ${name}.c ' + env.ccflags, './exec', 8),
+    'cpp': (env.cxx + ' -o exec ${name}.cpp ' + env.cxxflags, './exec', 8),
     'cs': ('mcs -warn:0 -o+ -r:System.Numerics ${name}.cs',
            'mono ${name}.exe', 16),
     'd': ('dmd -m64 -w -O -release -inline ${name}.d', './${name}', 12),
@@ -31,8 +28,7 @@ rule_from_language = {
     'go': (None, 'go run ${name}.go', 12),
     'hs': ('ghc -O2 ${name}.hs -o exec', './exec', 12),
     'java': ('javac ${name}.java', 'java -Xms512m ${name}', 16),
-    'ml': ('ocamlfind ocamlopt ${name}.ml'
-           ' -linkpkg -thread -package str,num,threads,batteries -o exec',
+    'ml': (env.ocamlopt + ' ${name}.ml -o exec ' + env.ocamloptflags,
            './exec', 12),
     'py': (None, '/usr/bin/env python ${name}.py', 40),
     'rb': (None, 'ruby ${name}.rb', 40),
