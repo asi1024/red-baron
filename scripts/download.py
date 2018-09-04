@@ -37,11 +37,14 @@ def download_from_case_id(pid, cid):
         return False
 
 
-def download_from_problem_id(pid):
+def download_from_problem_id(pid, redownload=False):
     path = tests_dir / pid
     if path.is_dir():
-        print('Dowloading {} skipped.'.format(pid))
-        return
+        if redownload:
+            shutil.rmtree(path)
+        else:
+            print('Dowloading {} skipped.'.format(pid))
+            return
 
     print('Dowloading {}...'.format(pid))
 
