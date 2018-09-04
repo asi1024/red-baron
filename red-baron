@@ -13,7 +13,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument(
         'target', nargs='?', help='target directory', default='.')
+    parser.add_argument('--redownload', action='store_true')
     args = parser.parse_args()
     target = Path.cwd() / args.target
+    redownload = args.redownload
 
-    scripts.test_recursive(target)
+    scripts.test_recursive(target, redownload)

@@ -40,7 +40,7 @@ rule_from_language = {
 }
 
 
-def test_single(target):
+def test_single(target, redownload=False):
     suffix = target.suffix[1:]
     source = workspace_dir / target.name
     out = workspace_dir / 'out'
@@ -51,7 +51,7 @@ def test_single(target):
     print('>> {}'.format(target))
 
     # Download
-    download.download_from_problem_id(source.stem)
+    download.download_from_problem_id(source.stem, redownload)
 
     # Prepare
     if workspace_dir.exists() and workspace_dir.is_dir():
@@ -118,7 +118,7 @@ def test_single(target):
     shutil.rmtree(str(workspace_dir))
 
 
-def test_recursive(target):
+def test_recursive(target, redownload=False):
     if str(target.name) in ignore_file:
         return
 
@@ -127,9 +127,9 @@ def test_recursive(target):
                    if not str(p.name).startswith('.')]
         listdir.sort()
         for x in listdir:
-            test_recursive(x)
+            test_recursive(x, redownload)
     else:
-        test_single(target)
+        test_single(target, redownload)
 
 
 if __name__ == '__main__':
