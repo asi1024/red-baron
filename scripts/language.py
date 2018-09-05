@@ -3,10 +3,10 @@ import string
 
 
 class CompileRule(object):
-    def __init__(self, compile_rule, exec_rule=None, time_duration=8):
+    def __init__(self, compile_rule, exec_rule=None, time_limits=8):
         self._compile_rule = compile_rule
         self._exec_rule = './exec' if exec_rule is None else exec_rule
-        self.time_duration = time_duration
+        self.time_limits = time_limits
 
     def compile(self, source):
         workspace = source.parent
@@ -22,22 +22,22 @@ class CompileRule(object):
         workspace = source.parent
         com = string.Template(self._exec_rule).substitute(name=source.stem)
         result = os.system('cd {} && timeout -s 9 {} {} < {} > {}'.format(
-            workspace, self.time_duration, com, testcase, output.name))
+            workspace, self.time_limits, com, testcase, output.name))
         return result
 
 
 class CompileRuleP(CompileRule):
-    def __init__(self, compiler, flags, time_duration=8):
+    def __init__(self, compiler, flags, time_limits=8):
         self._compile_rule = '{} -o exec ${source} {}'.format(
             compiler, flags, source='{source}')
         self._exec_rule = './exec'
-        self.time_duration = time_duration
+        self.time_limits = time_limits
 
 
 class ScriptRule(CompileRule):
-    def __init__(self, exec_rule, time_duration=40):
+    def __init__(self, exec_rule, time_limits=40):
         self._exec_rule = exec_rule
-        self.time_duration = time_duration
+        self.time_limits = time_limits
 
     def compile(self, source):
         return 0

@@ -5,6 +5,7 @@ from pathlib import Path
 import shutil
 import sys
 from termcolor import colored
+import time
 
 from scripts import diff
 from scripts import download
@@ -46,13 +47,17 @@ def test_single(target, redownload=False):
 
     # Test
     tests = tests_dir / source.stem
+    max_time = 0
 
     for test_id in set(int(t.stem) for t in tests.iterdir()):
         testcase = (tests / str(test_id)).with_suffix('.in')
         answer = (tests / str(test_id)).with_suffix('.out')
 
         # Run
+        start_time = time.time()
         result = rule.execute(source, testcase, out)
+        time_duration = int((time.time() - start_time) * 1000)
+        max_time = max(max_time, time_duration)
 
         if result in [137, 35072]:
             msg = colored('Time Limit Exceeded', 'yellow')
@@ -63,7 +68,7 @@ def test_single(target, redownload=False):
         else:
             msg = 'Correct'
 
-        print('{}: {}'.format(testcase, msg))
+        print('{}: {} ({} ms)'.format(testcase, msg, time_duration))
 
         if msg != 'Correct':
             print('=== {} ==='.format(testcase))
@@ -77,7 +82,8 @@ def test_single(target, redownload=False):
                 print('\n'.join(f.readlines()))
             exit(1)
 
-    print('{}: {}'.format(target, colored('Passed', 'green')))
+    result_msg = 'Passed ({} ms)'.format(max_time)
+    print('{}: {}'.format(target, colored(result_msg, 'green')))
     print('')
 
     shutil.rmtree(str(workspace_dir))
