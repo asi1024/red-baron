@@ -51,10 +51,10 @@ rule_from_language = {
         os.getenv('CXX', 'g++'),
         os.getenv('CXXFLAGS', '-O2 --std=c++14 -Wall')),
     'cs': CompileRule(
-        'mcs -warn:0 -o+ -r:System.Numerics ${name}.cs',
+        'mcs -warn:0 -o+ -r:System.Numerics ${source}',
         'mono ${name}.exe', 16),
     'd': CompileRule(
-        'dmd -m64 -w -O -release -inline ${name}.d',
+        'dmd -m64 -w -O -release -inline ${source}',
         './${name}', 12),
     'go': ScriptRule(
         'go run ${name}.go', 20),
@@ -62,7 +62,7 @@ rule_from_language = {
         os.getenv('GHC', 'ghc'),
         os.getenv('GHCFLAGS', '-O2'), 12),
     'java': CompileRule(
-        'javac ${name}.java',
+        'javac ${source}',
         'java -Xms512m ${name}', 16),
     'ml': CompileRuleP(
         os.getenv('OCAMLOPT', 'ocamlfind ocamlopt'),
