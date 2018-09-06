@@ -29,6 +29,7 @@
 *.app
 
 __pycache__
+red_baron.egg-info
 .DS_Store
 
 tests
