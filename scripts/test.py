@@ -73,13 +73,13 @@ def test_single(target, redownload=False):
         if msg != 'Correct':
             print('=== {} ==='.format(testcase))
             with testcase.open() as f:
-                print('\n'.join(f.readlines()))
+                print(''.join(f.readlines()))
             print('=== Expected ===')
             with answer.open() as f:
-                print('\n'.join(f.readlines()))
+                print(''.join(f.readlines()))
             print('=== Output ===')
             with out.open() as f:
-                print('\n'.join(f.readlines()))
+                print(''.join(f.readlines()))
             exit(1)
 
     result_msg = 'Passed ({} ms)'.format(max_time)
