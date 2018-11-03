@@ -19,7 +19,10 @@ def is_same_word(s1, s2):
     s2 = s2.rstrip('\r\n')
     if is_float(s1) and is_float(s2):
         e, a = float(s1), float(s2)
-        return abs(e - a) < 1e-6 or abs(a / e - 1) < 1e-6
+        if e == 0:
+            return a == 0
+        else:
+            return abs(e - a) < 1e-6 or abs(a / e - 1) < 1e-6
     return s1 == s2
 
 
