@@ -17,7 +17,17 @@ workspace_dir = download.cache_dir / 'workspace'
 ignore_file = ['diff.py', 'download.py', 'test.py']
 
 
-def test_single(target, redownload=False):
+def print_lines(lines, max_lines):
+    count = 0
+    for line in lines:
+        if count >= max_lines:
+            print('...')
+            return
+        print(line.strip())
+        count += 1
+
+
+def test_single(target, redownload, max_lines):
     suffix = target.suffix[1:]
     source = workspace_dir / target.name
     out = workspace_dir / 'out'
@@ -73,13 +83,13 @@ def test_single(target, redownload=False):
         if msg != 'Correct':
             print('=== {} ==='.format(testcase))
             with testcase.open() as f:
-                print(''.join(f.readlines()))
+                print_lines(f.readlines(), max_lines)
             print('=== Expected ===')
             with answer.open() as f:
-                print(''.join(f.readlines()))
+                print_lines(f.readlines(), max_lines)
             print('=== Output ===')
             with out.open() as f:
-                print(''.join(f.readlines()))
+                print_lines(f.readlines(), max_lines)
             exit(1)
 
     result_msg = 'Passed ({} ms)'.format(max_time)
@@ -89,7 +99,7 @@ def test_single(target, redownload=False):
     shutil.rmtree(str(workspace_dir))
 
 
-def test_recursive(target, redownload=False):
+def test_recursive(target, redownload, max_lines):
     if str(target.name) in ignore_file:
         return
 
@@ -98,9 +108,9 @@ def test_recursive(target, redownload=False):
                    if not str(p.name).startswith('.')]
         listdir.sort()
         for x in listdir:
-            test_recursive(x, redownload)
+            test_recursive(x, redownload, max_lines)
     else:
-        test_single(target, redownload)
+        test_single(target, redownload, max_lines)
 
 
 if __name__ == '__main__':
@@ -112,8 +122,11 @@ if __name__ == '__main__':
         'target', nargs='?', help='target directory', default='.')
     parser.add_argument(
         '--redownload', help='Redownload testcase', action='store_true')
+    parser.add_argument(
+        '--lines', '-n', nargs='?', help='Output first N lines', default=10)
     args = parser.parse_args()
     target = Path.cwd() / args.target
     redownload = args.redownload
+    max_lines = int(args.lines)
 
-    test_recursive(target, redownload)
+    test_recursive(target, redownload, max_lines)
