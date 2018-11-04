@@ -23,7 +23,7 @@ def print_lines(lines, max_lines):
         if count >= max_lines:
             print('...')
             return
-        print(line.strip())
+        print(line)
         count += 1
 
 
