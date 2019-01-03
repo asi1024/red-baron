@@ -38,7 +38,8 @@ def test_single(target, redownload, max_lines):
     print('>> {}'.format(target))
 
     # Download
-    download.download_from_problem_id(source.stem, redownload)
+    problem_id = source.stem.split('.')[0]
+    download.download_from_problem_id(problem_id, redownload)
 
     # Prepare
     if workspace_dir.exists() and workspace_dir.is_dir():
