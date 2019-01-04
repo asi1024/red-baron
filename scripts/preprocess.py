@@ -86,7 +86,7 @@ def preprocess(path):
         result = rule.preprocess_line(path, recursive)
 
         result_lines.append('')
-        result_lines.append(rule.comment_line(str(path)))
+        result_lines.append(rule.comment_line(str(path.name)))
         result_lines.append('')
         result_lines.extend(result)
         result_lines.append('')
