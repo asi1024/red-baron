@@ -111,7 +111,9 @@ matrix:
         - flake8
 
 before_install:
-  - yes | pyenv install 3.6.3
+  - if [ ! -e ${PYENV_ROOT}/versions/3.6.3 ]; then
+      pyenv install 3.6.3;
+    fi
   - pyenv global 3.6.3
   - pip install --upgrade pip
   - pip install .
@@ -121,7 +123,6 @@ cache:
   - directories:
     - ${HOME}/.red_baron
     - ${HOME}/.opam
-    - ${PYENV_ROOT}
 
 sudo: false
 
