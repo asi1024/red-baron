@@ -67,7 +67,7 @@ matrix:
         - sudo apt-get update
         - sudo apt-get install opam
         - opam init -y
-        - if [ -e ${HOME}/.opam ]; then
+        - if [ -e ${HOME}/.opam/4.07.0 ]; then
             opam switch 4.07.0;
           else
             opam switch create 4.07.0;
