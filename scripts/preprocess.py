@@ -78,6 +78,7 @@ def preprocess(path):
     result_lines = []
 
     def recursive(path):
+        path = path.resolve()
         if str(path) in includes_set:
             return
         includes_set.add(str(path))
