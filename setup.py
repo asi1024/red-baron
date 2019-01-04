@@ -10,4 +10,4 @@ setup(name='red-baron',
       author_email='akifumi.imanishi@gmail.com',
       url='https://github.com/asi1024/red-baron',
       packages=find_packages(exclude=('example',)),
-      scripts=['red-baron'])
+      scripts=['red-baron', 'preprocessor'])

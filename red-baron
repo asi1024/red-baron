@@ -7,8 +7,8 @@ import sys
 import scripts
 
 if __name__ == '__main__':
-    if sys.version_info[:3] < (3, 4, 0):
-        Exception('Use Python 3.4 or later')
+    if sys.version_info[:3] < (3, 5, 0):
+        Exception('Use Python 3.5 or later')
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
