@@ -57,7 +57,7 @@ def test_single(target, redownload, max_lines):
         exit(1)
 
     # Test
-    tests = tests_dir / source.stem
+    tests = tests_dir / problem_id
     max_time = 0
 
     for test_id in set(int(t.stem) for t in tests.iterdir()):
