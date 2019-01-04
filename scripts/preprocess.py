@@ -5,15 +5,8 @@ from datetime import datetime
 from pathlib import Path
 
 
-def preprocess(path):
-    includes_set = set()
-    result_lines = []
-
-    def recursive(path):
-        if str(path) in includes_set:
-            return
-        includes_set.add(str(path))
-
+class CppRule(object):
+    def preprocess_line(self, path, recursive):
         result = []
         for line in path.open():
             line = line.rstrip()
@@ -25,18 +18,83 @@ def preprocess(path):
                 continue
             else:
                 result.append(line)
+        return result
+
+    def comment_line(self, line):
+        return '// ' + line
+
+
+class OCamlRule(object):
+    def preprocess_line(self, path, recursive):
+        result = []
+        for line in path.open():
+            line = line.rstrip()
+            if line.startswith('(*+') and line.endswith('+*)'):
+                s = line.split(' ')
+                assert (len(s) == 4)
+                assert (s[0] == '(*+')
+                assert (s[1] == 'import')
+                assert (s[3] == '+*)')
+                relpath = path.parent / s[2]
+                recursive(relpath)
+            else:
+                result.append(line)
+        return result
+
+    def comment_line(self, line):
+        return '(* ' + line + ' *)'
+
+
+class DefaultRule(object):
+    def preprocess_line(self, path, recursive):
+        result = [line.rstrip() for line in path.open()]
+        return result
+
+    def comment_line(self, line):
+        return ''
+
+
+rule_dict = {
+    '.c': CppRule(),
+    '.h': CppRule(),
+    '.hpp': CppRule(),
+    '.cpp': CppRule(),
+    '.ml': OCamlRule(),
+
+    '.cs': DefaultRule(),
+    '.d': DefaultRule(),
+    '.go': DefaultRule(),
+    '.hs': DefaultRule(),
+    '.java': DefaultRule(),
+    '.rs': DefaultRule(),
+    '.py': DefaultRule(),
+    '.rb': DefaultRule(),
+}
+
+
+def preprocess(path):
+    rule = rule_dict[path.suffix]
+    includes_set = set()
+    result_lines = []
+
+    def recursive(path):
+        if str(path) in includes_set:
+            return
+        includes_set.add(str(path))
+
+        result = rule.preprocess_line(path, recursive)
 
         result_lines.append('')
-        result_lines.append('// {}'.format(path))
+        result_lines.append(rule.comment_line(str(path)))
         result_lines.append('')
         result_lines.extend(result)
         result_lines.append('')
 
     time = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
 
-    result_lines.append('// ===== {} ====='.format(time))
+    result_lines.append(rule.comment_line('===== {} ====='.format(time)))
     recursive(path)
-    result_lines.append('// ===== {} ====='.format(time))
+    result_lines.append(rule.comment_line('===== {} ====='.format(time)))
 
     lines = []
     for line in result_lines:
