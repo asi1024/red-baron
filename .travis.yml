@@ -112,11 +112,6 @@ matrix:
 
 before_install:
   - if [ ! -e ${PYENV_ROOT}/versions/3.6.3 ]; then
-      rm -rf ${PYENV_ROOT}/versions;
-      mkdir -p ${HOME}/.pyenv_versions;
-      ln -s ${HOME}/.pyenv_versions ${PYENV_ROOT}/versions;
-    fi
-  - if [ ! -e ${PYENV_ROOT}/versions/3.6.3 ]; then
       pyenv install 3.6.3;
     fi
   - pyenv global 3.6.3
@@ -127,9 +122,7 @@ cache:
   - apt
   - directories:
     - ${HOME}/.red_baron
-    - ${HOME}/.cabal
     - ${HOME}/.opam
-    - ${HOME}/.pyenv_versions
 
 sudo: false
 
