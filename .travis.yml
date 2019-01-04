@@ -121,6 +121,7 @@ cache:
   - directories:
     - ${HOME}/.red_baron
     - ${HOME}/.opam
+    - ${PYENV_ROOT}
 
 sudo: false
 
