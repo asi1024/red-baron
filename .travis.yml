@@ -114,6 +114,8 @@ before_install:
 
 cache:
   - apt
+  - directories:
+    - ${HOME}/.red_baron
 
 sudo: false
 
