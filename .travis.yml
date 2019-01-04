@@ -67,7 +67,11 @@ matrix:
         - sudo apt-get update
         - sudo apt-get install opam
         - opam init -y
-        - opam switch create 4.07.0
+        - if [ -e ${HOME}/.opam ]; then
+            opam switch 4.07.0;
+          else
+            opam switch create 4.07.0;
+          fi
         - eval $(opam config env)
         - opam config var root
         - opam install -y num batteries
@@ -116,6 +120,7 @@ cache:
   - apt
   - directories:
     - ${HOME}/.red_baron
+    - ${HOME}/.opam
 
 sudo: false
 
