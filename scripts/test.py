@@ -10,6 +10,7 @@ import time
 from scripts import diff
 from scripts import download
 from scripts import language
+from scripts import preprocess
 
 
 tests_dir = download.tests_dir
@@ -47,7 +48,7 @@ def test_single(target, redownload, max_lines):
 
     workspace_dir.mkdir(parents=True)
 
-    shutil.copy(src=str(target), dst=str(source))
+    source.write_text(preprocess.preprocess(target))
     rule = language.rule_from_language[suffix]
 
     # Compile
@@ -115,8 +116,8 @@ def test_recursive(target, redownload, max_lines):
 
 
 if __name__ == '__main__':
-    if sys.version_info[:3] < (3, 4, 0):
-        Exception('Use Python 3.4 or later')
+    if sys.version_info[:3] < (3, 5, 0):
+        Exception('Use Python 3.5 or later')
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
