@@ -118,6 +118,8 @@ before_install:
   - pip install --upgrade pip
   - pip install .
 
+if: branch = master OR type in (pull_request)
+
 cache:
   - apt
   - directories:
