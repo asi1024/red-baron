@@ -67,7 +67,7 @@ def download_from_problem_id(pid, redownload=False):
         except FileExistsError:
             pass
 
-        shutil.move(tmp_dir, '{}/{}'.format(tests_dir, pid))
+        shutil.move(str(tmp_dir), '{}/{}'.format(tests_dir, pid))
         print('Downloaded {} ({} cases).'.format(pid, case_num))
 
     else:
