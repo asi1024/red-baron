@@ -41,7 +41,7 @@ def download_from_problem_id(pid, redownload=False):
     path = tests_dir / pid
     if path.is_dir():
         if redownload:
-            shutil.rmtree(path)
+            shutil.rmtree(str(path))
         else:
             print('Dowloading {} skipped.'.format(pid))
             return
@@ -49,7 +49,7 @@ def download_from_problem_id(pid, redownload=False):
     print('Dowloading {}...'.format(pid))
 
     if tmp_dir.exists() and tmp_dir.is_dir():
-        shutil.rmtree(tmp_dir)
+        shutil.rmtree(str(tmp_dir))
 
     tmp_dir.mkdir(parents=True)
     case_num = 0
