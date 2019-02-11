@@ -3,10 +3,20 @@
 import argparse
 from datetime import datetime
 from pathlib import Path
+import typing
 
 
-class CppRule(object):
-    def preprocess_line(self, path, recursive):
+class RuleBase(object):
+    def preprocess_line(self, path: Path, recursive) -> typing.List[str]:
+        result = [line.rstrip() for line in path.open()]
+        return result
+
+    def comment_line(self, line: str) -> str:
+        return ''
+
+
+class CppRule(RuleBase):
+    def preprocess_line(self, path: Path, recursive) -> typing.List[str]:
         result = []
         for line in path.open():
             line = line.rstrip()
@@ -20,12 +30,12 @@ class CppRule(object):
                 result.append(line)
         return result
 
-    def comment_line(self, line):
+    def comment_line(self, line: str) -> str:
         return '// ' + line
 
 
-class OCamlRule(object):
-    def preprocess_line(self, path, recursive):
+class OCamlRule(RuleBase):
+    def preprocess_line(self, path: Path, recursive) -> typing.List[str]:
         result = []
         for line in path.open():
             line = line.rstrip()
@@ -41,12 +51,12 @@ class OCamlRule(object):
                 result.append(line)
         return result
 
-    def comment_line(self, line):
+    def comment_line(self, line: str) -> str:
         return '(* ' + line + ' *)'
 
 
-class RustRule(object):
-    def preprocess_line(self, path, recursive):
+class RustRule(RuleBase):
+    def preprocess_line(self, path: Path, recursive) -> typing.List[str]:
         result = []
         for line in path.open():
             line = line.rstrip()
@@ -57,43 +67,34 @@ class RustRule(object):
                 result.append(line)
         return result
 
-    def comment_line(self, line):
+    def comment_line(self, line: str) -> str:
         return '// ' + line
 
 
-class DefaultRule(object):
-    def preprocess_line(self, path, recursive):
-        result = [line.rstrip() for line in path.open()]
-        return result
-
-    def comment_line(self, line):
-        return ''
-
-
-rule_dict = {
+rule_dict: typing.Dict[str, RuleBase] = {
     '.c': CppRule(),
     '.h': CppRule(),
     '.hpp': CppRule(),
     '.cpp': CppRule(),
     '.ml': OCamlRule(),
-
-    '.cs': DefaultRule(),
-    '.d': DefaultRule(),
-    '.go': DefaultRule(),
-    '.hs': DefaultRule(),
-    '.java': DefaultRule(),
     '.rs': RustRule(),
-    '.py': DefaultRule(),
-    '.rb': DefaultRule(),
+
+    '.cs': RuleBase(),
+    '.d': RuleBase(),
+    '.go': RuleBase(),
+    '.hs': RuleBase(),
+    '.java': RuleBase(),
+    '.py': RuleBase(),
+    '.rb': RuleBase(),
 }
 
 
-def preprocess(path):
-    rule = rule_dict[path.suffix]
-    includes_set = set()
-    result_lines = []
+def preprocess_file(path: Path) -> str:
+    rule: RuleBase = rule_dict[path.suffix]
+    includes_set: typing.Set[str] = set()
+    result_lines: typing.List[str] = []
 
-    def recursive(path):
+    def recursive(path: Path) -> None:
         path = path.resolve()
         if str(path) in includes_set:
             return
@@ -113,7 +114,7 @@ def preprocess(path):
     recursive(path)
     result_lines.append(rule.comment_line('===== {} ====='.format(time)))
 
-    lines = []
+    lines: typing.List[str] = []
     for line in result_lines:
         if not(line == '' and (len(lines) == 0 or lines[-1] == '')):
             lines.append(line)
@@ -125,5 +126,5 @@ if __name__ == '__main__':
     parser.add_argument('filepath', nargs=1, help='source')
     args = parser.parse_args()
     filepath = Path(args.filepath[0])
-    result = preprocess(filepath)
+    result = preprocess_file(filepath)
     print(result)

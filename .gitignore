@@ -31,6 +31,7 @@
 __pycache__
 red_baron.egg-info
 .DS_Store
+.mypy_cache
 
 tests
 tmp

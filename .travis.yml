@@ -106,9 +106,10 @@ matrix:
       env:
         - ENV='Lint'
       script:
-        - pip install autopep8 flake8
+        - pip install autopep8 flake8 mypy
         - autopep8 -r . --diff
         - flake8
+        - mypy scripts/
 
 before_install:
   - if [ ! -e ${PYENV_ROOT}/versions/3.6.3 ]; then

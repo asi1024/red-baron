@@ -6,19 +6,19 @@ import shutil
 import sys
 from termcolor import colored
 import time
+import typing
 
 from scripts import diff
 from scripts import download
 from scripts import language
 from scripts import preprocess
 
-
 tests_dir = download.tests_dir
 workspace_dir = download.cache_dir / 'workspace'
 ignore_file = ['diff.py', 'download.py', 'test.py']
 
 
-def print_lines(lines, max_lines):
+def print_lines(lines: typing.List[str], max_lines: int) -> None:
     count = 0
     for line in lines:
         if count >= max_lines:
@@ -28,7 +28,7 @@ def print_lines(lines, max_lines):
         count += 1
 
 
-def test_single(target, redownload, max_lines):
+def test_single(target: Path, redownload: bool, max_lines: int):
     suffix = target.suffix[1:]
     source = workspace_dir / target.name
     out = workspace_dir / 'out'
@@ -48,7 +48,7 @@ def test_single(target, redownload, max_lines):
 
     workspace_dir.mkdir(parents=True)
 
-    source.write_text(preprocess.preprocess(target))
+    source.write_text(preprocess.preprocess_file(target))
     rule = language.rule_from_language[suffix]
 
     # Compile
@@ -101,7 +101,7 @@ def test_single(target, redownload, max_lines):
     shutil.rmtree(str(workspace_dir))
 
 
-def test_recursive(target, redownload, max_lines):
+def test_recursive(target: Path, redownload: bool, max_lines: int) -> None:
     if str(target.name) in ignore_file:
         return
 
@@ -115,10 +115,9 @@ def test_recursive(target, redownload, max_lines):
         test_single(target, redownload, max_lines)
 
 
-def test(targets, redownload, max_lines):
+def test(targets: str, redownload: bool, max_lines: int) -> None:
     for target in targets:
-        target = Path.cwd() / target
-        test_recursive(target, redownload, max_lines)
+        test_recursive(Path.cwd() / target, redownload, max_lines)
 
 
 if __name__ == '__main__':

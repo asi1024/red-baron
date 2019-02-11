@@ -17,15 +17,15 @@ error_mes = [
 ]
 
 
-def download_from_case_id(pid, cid):
+def download_from_case_id(pid: str, cid: int) -> bool:
 
     def check(result):
         return result.status_code == 200 and \
             all(result.text != mes.format(pid, cid) for mes in error_mes)
 
-    path = '{}/{}/{}/'.format(url, pid, cid)
-    in_result = requests.get(path + 'in')
-    out_result = requests.get(path + 'out')
+    path = Path(url) / pid / str(cid)
+    in_result = requests.get(str(path.with_suffix('in')))
+    out_result = requests.get(str(path.with_suffix('out')))
 
     if check(in_result) and check(out_result):
         with open('{}/{}.in'.format(tmp_dir, cid), mode='w') as f:
@@ -37,7 +37,7 @@ def download_from_case_id(pid, cid):
         return False
 
 
-def download_from_problem_id(pid, redownload=False):
+def download_from_problem_id(pid: str, redownload=False) -> None:
     path = tests_dir / pid
     if path.is_dir():
         if redownload:
