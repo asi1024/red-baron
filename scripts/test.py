@@ -115,20 +115,23 @@ def test_recursive(target, redownload, max_lines):
         test_single(target, redownload, max_lines)
 
 
+def test(targets, redownload, max_lines):
+    for target in targets:
+        target = Path.cwd() / target
+        test_recursive(target, redownload, max_lines)
+
+
 if __name__ == '__main__':
     if sys.version_info[:3] < (3, 5, 0):
         Exception('Use Python 3.5 or later')
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        'target', nargs='?', help='target directory', default='.')
+        'targets', nargs='+', help='target directory', default='.')
     parser.add_argument(
         '--redownload', help='Redownload testcase', action='store_true')
     parser.add_argument(
         '--lines', '-n', nargs='?', help='Output first N lines', default=10)
     args = parser.parse_args()
-    target = Path.cwd() / args.target
-    redownload = args.redownload
-    max_lines = int(args.lines)
 
-    test_recursive(target, redownload, max_lines)
+    test(args.targets, args.redownload, int(args.lines))
