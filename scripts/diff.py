@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
 import argparse
-import pathlib
+from pathlib import Path
+import typing
 
 
-def is_float(s):
+def is_float(s: str) -> bool:
     if s == 'inf' or s == 'INF':
         return False
     try:
@@ -14,7 +15,7 @@ def is_float(s):
     return True
 
 
-def is_same_word(s1, s2):
+def is_same_word(s1: str, s2: str) -> bool:
     s1 = s1.rstrip('\r\n')
     s2 = s2.rstrip('\r\n')
     if is_float(s1) and is_float(s2):
@@ -26,8 +27,8 @@ def is_same_word(s1, s2):
     return s1 == s2
 
 
-def is_same_recursive(checker, delim):
-    def wrapper(line1, line2):
+def is_same_recursive(checker: typing.Callable[[str, str], bool], delim: str):
+    def wrapper(line1: str, line2: str) -> bool:
         s1_list = line1.rstrip('\r\n').split(delim)
         s2_list = line2.rstrip('\r\n').split(delim)
 
@@ -37,13 +38,13 @@ def is_same_recursive(checker, delim):
     return wrapper
 
 
-def read_file(path):
+def read_file(path: Path) -> str:
     with path.open() as f:
         s = '\n'.join(f.readlines())
     return s
 
 
-def diff(path1, path2):
+def diff(path1: Path, path2: Path) -> bool:
     s1 = read_file(path1)
     s2 = read_file(path2)
     is_same_line = is_same_recursive(is_same_word, ' ')
@@ -57,8 +58,8 @@ if __name__ == '__main__':
     parser.add_argument('file2', type=str, nargs=1, help='Path to FILE')
     args = parser.parse_args()
 
-    path1 = pathlib.Path(args.file1[0])
-    path2 = pathlib.Path(args.file2[0])
+    path1 = Path(args.file1[0])
+    path2 = Path(args.file2[0])
 
     if diff(path1, path2):
         print('Correct')
