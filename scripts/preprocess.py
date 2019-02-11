@@ -45,6 +45,22 @@ class OCamlRule(object):
         return '(* ' + line + ' *)'
 
 
+class RustRule(object):
+    def preprocess_line(self, path, recursive):
+        result = []
+        for line in path.open():
+            line = line.rstrip()
+            if line.startswith('// #include') and len(line.split('"')) >= 3:
+                relpath = path.parent / ''.join(line.split('"')[1:-1])
+                recursive(relpath)
+            else:
+                result.append(line)
+        return result
+
+    def comment_line(self, line):
+        return '// ' + line
+
+
 class DefaultRule(object):
     def preprocess_line(self, path, recursive):
         result = [line.rstrip() for line in path.open()]
@@ -66,7 +82,7 @@ rule_dict = {
     '.go': DefaultRule(),
     '.hs': DefaultRule(),
     '.java': DefaultRule(),
-    '.rs': DefaultRule(),
+    '.rs': RustRule(),
     '.py': DefaultRule(),
     '.rb': DefaultRule(),
 }
