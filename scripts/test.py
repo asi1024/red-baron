@@ -24,7 +24,7 @@ def print_lines(lines: typing.List[str], max_lines: int) -> None:
         if count >= max_lines:
             print('...')
             return
-        print(line)
+        print(line.rstrip())
         count += 1
 
 
