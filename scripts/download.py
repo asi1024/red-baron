@@ -23,9 +23,9 @@ def download_from_case_id(pid: str, cid: int) -> bool:
         return result.status_code == 200 and \
             all(result.text != mes.format(pid, cid) for mes in error_mes)
 
-    path = Path(url) / pid / str(cid)
-    in_result = requests.get(str(path.with_suffix('.in')))
-    out_result = requests.get(str(path.with_suffix('.out')))
+    path: str = '{}/{}/{}'.format(url, pid, cid)
+    in_result = requests.get(path + '/in')
+    out_result = requests.get(path + '/out')
 
     if check(in_result) and check(out_result):
         with open('{}/{}.in'.format(tmp_dir, cid), mode='w') as f:
