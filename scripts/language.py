@@ -21,8 +21,12 @@ class CompileRule(object):
     def execute(self, source, testcase, output):
         workspace = source.parent
         com = string.Template(self._exec_rule).substitute(name=source.stem)
-        result = os.system('cd {} && timeout -s 9 {} {} < {} > {}'.format(
-            workspace, self.time_limits, com, testcase, output.name))
+        if testcase is None:
+            result = os.system('cd {} && timeout -s 9 {} {}'.format(
+                workspace, self.time_limits, com))
+        else:
+            result = os.system('cd {} && timeout -s 9 {} {} < {} > {}'.format(
+                workspace, self.time_limits, com, testcase, output.name))
         return result
 
 

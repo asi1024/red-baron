@@ -33,6 +33,9 @@ def test_single(target: Path, redownload: bool, max_lines: int):
     source = workspace_dir / target.name
     out = workspace_dir / 'out'
 
+    if target.name.startswith('bench_'):
+        return bench_single(target)
+
     if suffix not in language.rule_from_language:
         return
 
@@ -96,6 +99,46 @@ def test_single(target: Path, redownload: bool, max_lines: int):
 
     result_msg = 'Passed ({} ms)'.format(max_time)
     print('{}: {}'.format(target, colored(result_msg, 'green')))
+    print('')
+
+    shutil.rmtree(str(workspace_dir))
+
+
+def bench_single(target: Path):
+    suffix = target.suffix[1:]
+    source = workspace_dir / target.name
+
+    if suffix not in language.rule_from_language:
+        return
+
+    print('>> {}'.format(target))
+
+    # Prepare
+    if workspace_dir.exists() and workspace_dir.is_dir():
+        shutil.rmtree(workspace_dir)
+
+    workspace_dir.mkdir(parents=True)
+
+    source.write_text(preprocess.preprocess_file(target))
+    rule = language.rule_from_language[suffix]
+
+    # Compile
+    if rule.compile(source) != 0:
+        msg = colored('Compile Error', 'cyan')
+        print('{}: {}'.format(target, msg))
+        exit(1)
+
+    # Run
+    result = rule.execute(source, None, None)
+
+    if result in [137, 35072]:
+        msg = colored('Time Limit Exceeded', 'yellow')
+    elif result != 0:
+        msg = colored('Runtime Error', 'magenta')
+    else:
+        msg = colored('OK', 'green')
+
+    print('{}: {}'.format(target, msg))
     print('')
 
     shutil.rmtree(str(workspace_dir))
